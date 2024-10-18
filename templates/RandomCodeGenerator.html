@@ -1,0 +1,192 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+
+    <div class="py-3 my-2">
+
+        <h2 class="fw-bold mb-4"><span class="hover">Random Code Generator</span></h2>
+
+        <div class="col-md-6">
+            {% with error_messages = get_flashed_messages(category_filter=["error"]) %}
+                {% if error_messages %}
+                    {% for message in error_messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% with success_messages = get_flashed_messages(category_filter=["success"]) %}
+                {% if success_messages %}
+                    {% for message in success_messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}            
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <div class="mb-5">
+                <div class="my-2">
+                    <button class="btn btn-success bg-gradient border-0" data-bs-toggle="modal" data-bs-target="#excelStandardModal">
+                        <i class="bi bi-eye-fill pe-2"></i>Excel Standard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Update Season Modal -->
+        <div class="modal fade" id="excelStandardModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content rounded-4 shadow">
+                    <div class="modal-header p-5 pb-4 border-bottom-0">
+                        <h1 class="fw-bold mb-0 fs-2">Excel Table Format</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="modal-body p-5 pt-0">
+                        <img src="../static/images/Sample.PNG" class="img-thumbnail" alt="Excel Table Format" draggable="false">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <div class="p-3">
+                    <img src="../static/svg/Random.svg" alt="Team GIF" draggable="false">
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="p-3">
+                    <form method="post" action="/random-code-generator" enctype="multipart/form-data">
+                        <div class="row g-2 mb-3">
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <select class="form-select" id="cropSelect" name="cropSelect" required>
+                                        <option value="" hidden>Select Crop</option>
+                                        {% for eachCrop in data['cropName']  %}
+                                            <option value="{{eachCrop}}">{{eachCrop}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="cropSelect">Crops</label>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <select class="form-select" id="seasonSelect" name="seasonSelect" required>
+                                        <option value="" hidden>Select Season</option>
+                                        {% for eachSeason in data['seasonName']  %}
+                                            <option value="{{eachSeason}}">{{eachSeason}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="seasonSelect">Season</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-2 mb-3">
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <select class="form-select" id="zoneSelect" name="zoneSelect" required>
+                                        <option value="" hidden>Select Zone</option>
+                                        {% for eachZone in data['zoneName']  %}
+                                            <option value="{{eachZone}}">{{eachZone}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="zoneSelect">Zone</label>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <select class="form-select" id="ecosystemSelect" name="ecosystemSelect" required>
+                                        <option value="" hidden>Select Ecosystem</option>
+                                        {% for eachEcosystem in data['ecosystemName']  %}
+                                            <option value="{{eachEcosystem}}">{{eachEcosystem}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="ecosystemSelect">Ecosystem</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-8">
+                                <div class="form-floating">
+                                    <select class="form-select" id="trialSelect" name="trialSelect" required>
+                                        <option value="" hidden>Select Trial</option>
+                                        {% for name, abbreviation in data['trial'].items()  %}
+                                            <option value="{{abbreviation}}">{{name}} ({{abbreviation}})</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="trialSelect">Trial Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <select class="form-select" id="yearSelect" name="yearSelect" required>
+                                        <option value="" hidden>Select Year</option>
+                                        {% for year in data['yearOptions']  %}
+                                            <option value="{{year}}">{{year}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="trialSelect">Year</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-2 mb-3">
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <input type="number" min="1" class="form-control" id="entriesInput" placeholder="No. of Entries" name="entriesInput" required>
+                                    <label for="entriesInput">No. of Entries</label>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <input type="number" min="1" class="form-control" id="startingEntryCodeInput" placeholder="Starting Entry Code" name="startingEntryCodeInput" required>
+                                    <label for="startingEntryCodeInput">Starting Entry Code</label>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="mb-3">
+                            <input type="file" name="fileInput" class="form-control form-control-lg" accept=".xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  required>
+                        </div>
+        
+                        <button class="w-100 btn btn-lg btn-dark bg-gradient" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get references to the select elements and their labels
+        var cropSelect = document.getElementById('cropSelect');
+        var zoneSelect = document.getElementById('zoneSelect');
+        var zoneLabel = document.querySelector('label[for="zoneSelect"]');
+
+        // Function to update the "disabled" attribute
+        function updateDisabledAttribute() {
+            if (cropSelect.value === 'Castor') {
+                zoneSelect.disabled = true;
+            } else {
+                zoneSelect.disabled = false;
+            }
+        }
+
+        // Add an event listener to the cropSelect element
+        cropSelect.addEventListener('change', function() {
+            // Check if the selected crop is "Castor"
+            updateDisabledAttribute();
+        });
+
+        // Call the updateDisabledAttribute function on page load
+        updateDisabledAttribute();
+    </script>
+{% endblock mainBody %}

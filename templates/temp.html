@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+
+    <div class="table-responsive mb-3">
+        <table class="table table-hover caption-top text-center">
+
+            <caption class="fw-bold">List of Processed</caption>
+
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Zone</th>
+                    <th scope="col">Entry</th>
+                    <th scope="col">Pedigree</th>
+                    <th scope="col">Code</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+
+            <tbody class="table-group-divider">
+                    {% for eachProcessed in all_processed %}
+                        <tr>
+                            <th scope="row">{{eachProcessed.id}}</th>
+                            <td>{{eachProcessed.zone}}</td>
+                            <td>{{eachProcessed.entries}}</td>
+                            <td>{{eachProcessed.pedigree}}</td>
+                            <td>{{eachProcessed.code}}</td>
+                            <td><a href="/admin-temp-delete/{{eachProcessed.id}}" role="button"><i class="bi bi-trash text-danger"></i></a></td>
+                        </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock mainBody %}

@@ -1,0 +1,103 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+    <div class="mb-5">
+        <div class="my-2">
+            <a class="btn btn-outline-danger bg-gradient shadow-sm" href="/" role="button">
+                <i class="bi bi-house-door-fill pe-2"></i>Home
+            </a>
+        </div>
+    </div>
+
+    <div class="py-3 my-2">
+
+        <h2 class="fw-bold mb-4"><span class="hover">Query Dashboard</span></h2>
+
+        <div class="col-md-6">
+            {% with error_messages = get_flashed_messages(category_filter=["error"]) %}
+                {% if error_messages %}
+                    {% for message in error_messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% with success_messages = get_flashed_messages(category_filter=["success"]) %}
+                {% if success_messages %}
+                    {% for message in success_messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="row g-2 align-items-center">
+
+            <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4">
+                <div class="col">
+                    <a href="{{url_for('dashboardByYear')}}">
+                        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow-sm border-0" style="background-image: url('../static/images/cal.webp');">
+                            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold text-decoration-none">By Year</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="{{url_for('dashboardByYearandTrial')}}">
+                        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow border-0" style="background-image: url('../static/images/Year\ and\ Trial.webp');">
+                            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Year and Trial</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="{{ url_for('dashboardByParent') }}">
+                        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow-sm border-0" style="background-image: url('../static/images/Parent.webp');">
+                            <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">By Parent</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4">
+                <div class="col">
+                    <a href="{{url_for('dashboardByEntry')}}">
+                        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow-sm border-0" style="background-image: url('../static/images/dashboard-entry.avif');">
+                            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold text-decoration-none">By Entry</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="{{url_for('dashboardByCentre')}}">
+                        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow border-0" style="background-image: url('../static/images/dashboard-lab.avif');">
+                            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">By Centre</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="{{ url_for('dashboardByCheck') }}">
+                        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow-sm border-0" style="background-image: url('../static/images/dashboard-check.webp');">
+                            <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">By Check</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+
+{% endblock mainBody %}

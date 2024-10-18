@@ -1,0 +1,140 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+    <div class="mb-5">
+        <div class="my-2">
+            <a class="btn btn-outline-danger bg-gradient shadow-sm" href="/" role="button">
+                <i class="bi bi-house-door-fill pe-2"></i>Home
+            </a>
+        </div>
+    </div>
+
+    <div class="py-3 my-2">
+
+        <h2 class="fw-bold mb-4"><span class="hover">Account</span></h2>
+
+        <div class="col-md-6">
+            {% with error_messages = get_flashed_messages(category_filter=["error"]) %}
+                {% if error_messages %}
+                    {% for message in error_messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% with success_messages = get_flashed_messages(category_filter=["success"]) %}
+                {% if success_messages %}
+                    {% for message in success_messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="row g-2 align-items-center">
+
+            <div class="col-md-4">
+                <div class="p-3">
+                    <img src="../static/svg/Account.svg" alt="Account GIF" draggable="false">
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="p-3">
+
+                    <div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" value="{{current_user.name}}" readonly>
+                            <label>Full Name</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" value="{{current_user.email}}" readonly>
+                            <label>Email Address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="tel" class="form-control" value="{{current_user.phone}}" readonly>
+                            <label>Phone Number</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" value="{{current_user.designation}}" readonly>
+                            <label>Designation</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+                        <a class="btn btn-outline-dark bg-gradient" role="button" data-bs-toggle="modal" data-bs-target="#changePassword">
+                            <i class="bi bi-eraser-fill me-2"></i>Change Password
+                        </a>
+                        <a class="btn btn-outline-dark bg-gradient" role="button" data-bs-toggle="modal" data-bs-target="#updateUser">
+                            <i class="bi bi-pen-fill me-2"></i>Edit Profile
+                        </a>
+                    </div>
+        
+                    <!-- Account Update Modal -->
+                    <div class="modal fade" id="updateUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content rounded-4 shadow">
+                                <div class="modal-header p-5 pb-4 border-bottom-0">
+                                    <h1 class="fw-bold mb-0 fs-2">Edit Profile</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                
+                                <div class="modal-body p-5 pt-0">
+                                    <form action="/account-update" method="post">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control rounded-3" id="fullName" name="fullName" placeholder="Full Name" value="{{current_user.name}}">
+                                            <label for="fullName">Full Name</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="email" class="form-control rounded-3" id="emailAddress" name="emailAddress" placeholder="name@example.com" value="{{current_user.email}}">
+                                            <label for="emailAddress">Email Address</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="tel" class="form-control rounded-3" id="phone" name="phone" placeholder="Phone" value="{{current_user.phone}}">
+                                            <label for="phone">Phone</label>
+                                        </div>
+                                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Update</button>
+                                        <hr class="my-4">
+                                        <small class="text-body-secondary">Reviewing the terms of use is necessary before updating the data.</small>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Change Password Modal -->
+                    <div class="modal fade" id="changePassword" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content rounded-4 shadow">
+                                <div class="modal-header p-5 pb-4 border-bottom-0">
+                                    <h1 class="fw-bold mb-0 fs-2">Change Password</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                
+                                <div class="modal-body p-5 pt-0">
+                                    <form action="/change-password" method="post">
+                                        <div class="form-floating mb-3">
+                                            <input type="password" class="form-control rounded-3" id="password" name="password" placeholder="Password" required>
+                                            <label for="password">Password</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="password" class="form-control rounded-3" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                                            <label for="confimPassword">Confirm Password</label>
+                                        </div>
+                                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Update</button>
+                                        <hr class="my-4">
+                                        <small class="text-body-secondary">Reviewing the terms of use is necessary before updating the data.</small>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock mainBody %}

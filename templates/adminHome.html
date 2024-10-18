@@ -1,0 +1,165 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+    <div class="mb-5">
+        <div class="my-2">
+            <a class="btn btn-outline-danger bg-gradient shadow-sm" href="/" role="button">
+                <i class="bi bi-house-door-fill pe-2"></i>Home
+            </a>
+        </div>
+    </div>
+
+    <!-- Admin Home Cards -->
+    <div class="py-3 my-2" id="custom-cards">       
+
+        <div class="col-md-10">
+            {% with error_messages = get_flashed_messages(category_filter=["error"]) %}
+                {% if error_messages %}
+                    {% for message in error_messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% with success_messages = get_flashed_messages(category_filter=["success"]) %}
+                {% if success_messages %}
+                    {% for message in success_messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}            
+        </div>
+
+        <h3 class="fw-bold mb-4"><span class="hover">Manage Database Content</span></h3>
+
+        <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4">
+            <div class="col">
+                <a href="{{url_for('adminUsers')}}">
+                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow-sm border-0" style="background-image: url('../static/images/admin-home-users.webp');">
+                        <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold text-decoration-none">Users</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{{url_for('adminCrops')}}">
+                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow border-0" style="background-image: url('../static/images/admin-home-crops.webp');">
+                        <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Crops</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{{ url_for('adminTrials') }}">
+                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow-sm border-0" style="background-image: url('../static/images/admin-home-trials.webp');">
+                        <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+                            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Trials</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            
+            <div class="col">
+                <a href="{{url_for('adminZones')}}">
+                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow-sm border-0" style="background-image: url('../static/images/admin-home-zone.webp');">
+                        <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold text-decoration-none">Zones</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{{url_for('adminSeasons')}}">
+                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow border-0" style="background-image: url('../static/images/admin-home-seasons.webp');">
+                        <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Seasons</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{{ url_for('adminEcosystem') }}">
+                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-2 shadow-sm border-0" style="background-image: url('../static/images/admin-home-ecosystem.webp');">
+                        <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+                            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Ecosystem</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-2 rounded-3 border border-opacity-50 p-4 shadow-sm">
+        <table class="table caption-top table-borderless table-hover text-center">
+            <caption class="fw-bold text-center">All Data Statistics</caption>
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Entities</th>
+                    <th scope="col">Counts</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for category, count in counts.items() %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{ category }} Count</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="my-3 p-4">
+        <div class="row">
+            <div class="col-md-8">
+                <table class="table  caption-top table-borderless table-hover text-center">
+                    <caption class="fw-bold text-center">All Trials</caption>
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Trial Name</th>
+                            <th scope="col">Abbreviation</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {% for trial_name, trail_abbreviation in trialData.items() %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td>{{trial_name}}</td>
+                                <td title="{{trial_name}}">{{trail_abbreviation}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-4">
+                <table class="table  caption-top table-borderless table-hover text-center">
+                    <caption class="fw-bold text-center">Unique Years</caption>
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Years</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {% for each_year in years  %}
+                            <tr>
+                                <td>{{each_year}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
+{% endblock mainBody %}

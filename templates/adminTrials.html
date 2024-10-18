@@ -1,0 +1,109 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+
+    <div class="mb-5">
+        <div class="my-2">
+            <a class="btn btn-outline-danger bg-gradient shadow-sm" href="/admin-home" role="button">
+                <i class="bi bi-house-door-fill pe-2"></i>Admin Home
+            </a>
+        </div>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+        <button type="button" class="btn btn-dark bg-gradient border-0 me-md-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <i class="bi bi-plus-circle-fill me-2"></i>Add New Trial
+        </button>
+    </div>
+
+    <div class="table-responsive mb-3 text-center">
+        <table class="table table-hover caption-top">
+            <caption class="fw-bold">List of Trials</caption>
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Trial Name</th>
+                    <th scope="col">Trial Abbrevation</th>
+                    <th scope="col">Entry Date</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% if allTrials %}
+                    {% for eachTrial in allTrials %}
+                        <!-- Trials Table -->
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td>{{eachTrial.name}}</td>
+                            <td>{{eachTrial.abbreviation}}</td>
+                            <td title="{{eachTrial.dateCreated.strftime('%d-%m-%Y, %H:%M:%S')}}">{{eachTrial.days_ago()}}</td>
+                            <td><a href="/admin-trials-update/{{eachTrial.id}}" data-bs-toggle="modal" data-bs-target="#updateTrial{{eachTrial.id}}"><i class="bi bi-pen"></i></a></td>
+                            <td><a href="/admin-trials-delete/{{eachTrial.id}}"><i class="bi bi-trash text-danger"></i></a></td>
+                        </tr>
+
+                        <!-- Update Crop Modal -->
+                        <div class="modal fade" id="updateTrial{{eachTrial.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content rounded-4 shadow">
+                                    <div class="modal-header p-5 pb-4 border-bottom-0">
+                                        <h1 class="fw-bold mb-0 fs-2">Update Crop</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    
+                                    <div class="modal-body p-5 pt-0">
+                                        <form action="/admin-trial-update/{{eachTrial.id}}" method="post">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control rounded-3" id="trialName" name="trialName" placeholder="Tial Name" value="{{eachTrial.name}}" required oninput="updateAbbreviation()">
+                                                <label for="trialName">Trial Name</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control rounded-3" id="trialAbbreviation" name="trialAbbreviation" placeholder="Trial Abbreviation" value="{{eachTrial.abbreviation}}" required>
+                                                <label for="trialAbbreviation">Trial Abbreviation</label>
+                                            </div>
+                                            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Update</button>
+                                            <hr class="my-4">
+                                            <small class="text-body-secondary">Reviewing the terms of use is necessary before updating the data.</small>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-danger">No Trials Added. Use the Above Button to Add Trials.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    
+
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h1 class="fw-bold mb-0 fs-2">Add New Trial</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-5 pt-0">
+                    <form action="/admin-trials" method="post">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control rounded-3" id="trialName" name="trialName" placeholder="Tial Name" oninput="updateAbbreviation()" required >
+                            <label for="trialName">Trial Name</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control rounded-3" id="trialAbbreviation" name="trialAbbreviation" placeholder="Trial Abbreviation" required>
+                            <label for="trialAbbreviation">Trial Abbrevation</label>
+                        </div>
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Add</button>
+                        <hr class="my-4">
+                        <small class="text-body-secondary">Reviewing the terms of use is necessary before adding a new trial.</small>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock mainBody %}

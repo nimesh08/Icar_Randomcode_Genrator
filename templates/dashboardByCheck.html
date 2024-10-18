@@ -1,0 +1,96 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+    <div class="mb-5">
+        <div class="my-2">
+            <a class="btn btn-outline-danger bg-gradient shadow-sm" href="/dashboard" role="button">
+                <i class="bi bi-house-door-fill pe-2"></i>Dashboard Home
+            </a>
+        </div>
+    </div>
+
+    <div class="py-3 my-2">
+
+        <h2 class="fw-bold mb-4"><span class="hover">Search by Checks</span></h2>
+
+        <div class="col-md-6">
+            {% with error_messages = get_flashed_messages(category_filter=["error"]) %}
+                {% if error_messages %}
+                    {% for message in error_messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% with success_messages = get_flashed_messages(category_filter=["success"]) %}
+                {% if success_messages %}
+                    {% for message in success_messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}            
+        </div>
+
+        <div class="row g-2 w-50 mx-auto">
+            <form action="/dashboard-by-check" method="POST">
+                <div class="row">
+                    <div class="col-md">
+                        <select name="check"  class="form-select border-3 mb-3" aria-label=".form-select-lg example" required>
+                            <option value="" hidden="" disabled="disabled" selected="selected">Check</option>
+                            {% for each_checks in unique_checks  %}
+                                <option value="{{each_checks}}">{{each_checks}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-auto">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success bg-gradient">Process</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-responsive mb-3 text-center">
+            
+            <table class="table table-hover caption-top">
+                {% if check %}
+                    <caption>List of Checks with <span class="fw-bold" style="text-decoration: underline;">{{check}}</span></caption>
+                {% else %}
+                    <caption>List of Checks</caption>
+                {% endif %}
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Trial</th>
+                    </tr>
+                </thead>
+    
+                <tbody class="table-group-divider">
+                    {% if data %}
+                        {% for entry in data %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td>{{ entry.year }}</td>
+                                {% if entry.ecosystem == 'Utera' %}
+                                    <td>{{ entry.abbreviation}}-{{entry.ecosystem}}</td>
+                                {% else %}
+                                    <td>{{ entry.abbreviation}}-{{entry.ecosystem}}-{{entry.zone}}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-danger">Please select the desired options above to retrieve and display the data.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock mainBody %}

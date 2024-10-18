@@ -1,0 +1,104 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+    <div class="mb-5">
+        <div class="my-2">
+            <a class="btn btn-outline-danger bg-gradient shadow-sm" href="/dashboard" role="button">
+                <i class="bi bi-house-door-fill pe-2"></i>Dashboard Home
+            </a>
+        </div>
+    </div>
+
+    <div class="py-3 my-2">
+
+        <h2 class="fw-bold mb-4"><span class="hover">Search by Year and Trial</span></h2>
+
+        <div class="col-md-6">
+            {% with error_messages = get_flashed_messages(category_filter=["error"]) %}
+                {% if error_messages %}
+                    {% for message in error_messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% with success_messages = get_flashed_messages(category_filter=["success"]) %}
+                {% if success_messages %}
+                    {% for message in success_messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}            
+        </div>
+
+        <div class="row g-2 w-50 mx-auto">
+            <form action="/dashboard-by-year-and-trial" method="POST">
+                <div class="row">
+                    <div class="col-md">
+                        <select name="year" class="form-select border-3 mb-3" aria-label=".form-select-lg example" required>
+                            <option value="" hidden="" disabled="disabled" selected="selected">Years</option>
+                            {% for eachYear in years  %}
+                                <option value="{{eachYear}}">{{eachYear}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md">
+                        <select name="trial" class="form-select border-3 mb-3" aria-label=".form-select-lg example" required>
+                            <option value="" hidden="" disabled="disabled" selected="selected">Trial</option>
+                            {% for each_trial in trials  %}
+                                <option value="{{each_trial}}">{{each_trial}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-auto">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success bg-gradient">Process</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-responsive mb-3 text-center">
+            
+            <table class="table table-hover caption-top">
+                {% if selected_year %}
+                    <caption>List of Entries in <span class="fw-bold" style="text-decoration: underline;">{{selected_year}} and {{selected_trial}}.</span></caption>
+                {% else %}
+                    <caption>List of Entries</caption>
+                {% endif %}
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Entry</th>
+                        <th scope="col">Pedigree</th>
+                        <th scope="col">Centre</th>
+                    </tr>
+                </thead>
+    
+                <tbody class="table-group-divider">
+                    {% if data %}
+                        {% for entry in data %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td>{{ entry.code }}</td>
+                                <td>{{ entry.entries }}</td>
+                                <td>{{ entry.pedigree }}</td>
+                                <td>{{ entry.centres }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-danger">Please select the desired options above to retrieve and display the data.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+{% endblock mainBody %}

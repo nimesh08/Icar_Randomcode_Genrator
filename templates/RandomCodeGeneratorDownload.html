@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+
+    <div class="py-3 my-2">
+
+        <h2 class="fw-bold mb-4"><span class="hover">Random Codes Generated</span></h2>
+
+        <div class="col-md-6">
+            {% with error_messages = get_flashed_messages(category_filter=["error"]) %}
+                {% if error_messages %}
+                    {% for message in error_messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% with success_messages = get_flashed_messages(category_filter=["success"]) %}
+                {% if success_messages %}
+                    {% for message in success_messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}            
+        </div>
+
+        {% if data %}
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-5">
+                <a class="btn btn-outline-dark bg-gradient" href="{{ url_for('generate_labels') }}" role="button">
+                    <i class="bi bi-bookmarks-fill me-2"></i>Generate Labels
+                </a>
+                <a class="btn btn-outline-dark bg-gradient" href="{{ url_for('download_codes') }}"  role="button">
+                    <i class="bi bi-download me-2"></i>Download Codes
+                </a>
+                <a class="btn btn-dark" href="{{ url_for('add_to_database') }}"  role="button">
+                    <i class="bi bi-database-fill-add me-2"></i>Add To Database
+                </a>
+            </div>
+            <div class="d-grid d-md-flex justify-content-md-end mb-3">
+                
+                
+                <div class="table-responsive mb-3">
+                    <table class="table table-hoverless table-borderless align-middle">
+                        <tbody>
+                            <tr>
+                                <td>If you missed some entries, click this button to reset and start over.</td>
+                                <td class="text-center">
+                                    <a class="btn btn-outline-danger bg-gradient" href="{{ url_for('clear_database') }}" role="button">
+                                        <i class="bi bi-trash3-fill me-2"></i>Clear
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="table-responsive-xl mb-5">
+                <table class="table table-hover caption-top text-center">
+                    <caption class="fw-bold">Random Code Generated Data</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Trial</th>
+                            <th scope="col">Entries</th>
+                            <th scope="col">Pedigree</th>
+                            <th scope="col">Centres</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                            {% for row in data %}
+                                <tr>
+                                    <td>{{ row.id }}</td>
+                                    <td>{{ row.abbreviation }}</td>
+                                    <td>{{ row.entries}}</td>
+                                    <td>{{ row.pedigree }}</td>
+                                    <td>{{ row.centres}}</td>
+                                </tr>
+                            {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <script>
+                window.location.href = "{{ url_for('randomCodeGenerator') }}";
+            </script>
+        {% endif %}
+    </div>
+
+{% endblock mainBody %}

@@ -1,0 +1,223 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+
+    <div class="mb-5">
+        <div class="my-2">
+            <a class="btn btn-outline-danger bg-gradient shadow-sm" href="/admin-home" role="button">
+                <i class="bi bi-house-door-fill pe-2"></i>Admin Home
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        {% with error_messages = get_flashed_messages(category_filter=["error"]) %}
+            {% if error_messages %}
+                {% for message in error_messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% with success_messages = get_flashed_messages(category_filter=["success"]) %}
+            {% if success_messages %}
+                {% for message in success_messages %}
+                    <div class="alert alert-success" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+        <button type="button" class="btn btn-outline-dark bg-gradient me-md-2" data-bs-toggle="modal" data-bs-target="#addNewUser">
+            <i class="bi bi-plus-circle-fill me-2"></i>Add New User
+        </button>
+        <button type="button" class="btn btn-dark bg-gradient me-md-2" data-bs-toggle="modal" data-bs-target="#resetUserPassword">
+            <i class="bi bi-arrow-clockwise me-2"></i>Reset User Password
+        </button>
+    </div>
+
+    <div class="table-responsive mb-3 text-center">
+        <table class="table table-hover caption-top">
+
+            <caption class="fw-bold">List of Users</caption>
+
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Number</th>
+                    <th scope="col">Designation</th>
+                    <th scope="col">Crops</th>
+                    <th scope="col">Created Time</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+
+            <tbody class="table-group-divider">
+
+                {% if allUsers %}
+                    {% for eachUser in allUsers %}
+                        <!-- Users Table -->
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td class="user-select-all">{{eachUser.name}}</td>
+                            <td class="user-select-all">{{eachUser.email}}</td>
+                            <td class="user-select-all">{{eachUser.phone}}</td>
+                            <td>{{eachUser.designation}}</td>
+                            <td>{{eachUser.crops}}</td>
+                            <td title="{{eachUser.dateCreated.strftime('%d-%m-%Y, %H:%M:%S')}}">{{eachUser.days_ago()}}</td>
+                            <td><a href="/admin-user-update/{{eachUser.id}}" data-bs-toggle="modal" data-bs-target="#updateUser{{eachUser.id}}"><i class="bi bi-pen"></i></a></td>
+                            <td><a href="/admin-user-delete/{{eachUser.id}}"><i class="bi bi-trash text-danger"></i></a></td>
+                        </tr>
+
+                        <!-- Update User Modal -->
+                        <div class="modal fade" id="updateUser{{eachUser.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content rounded-4 shadow">
+                                    <div class="modal-header p-5 pb-4 border-bottom-0">
+                                        <h1 class="fw-bold mb-0 fs-2">Update User</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    
+                                    <div class="modal-body p-5 pt-0">
+                                        <form action="/admin-user-update/{{eachUser.id}}" method="post">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control rounded-3" id="fullName" name="fullName" placeholder="Full Name" value="{{eachUser.name}}">
+                                                <label for="fullName">Full Name</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="email" class="form-control rounded-3" id="emailAddress" name="emailAddress" placeholder="name@example.com" value="{{eachUser.email}}">
+                                                <label for="emailAddress">Email Address</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="tel" class="form-control rounded-3" id="phone" name="phone" placeholder="Phone" value="{{eachUser.phone}}">
+                                                <label for="phone">Phone</label>
+                                            </div>
+                                            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Update</button>
+                                            <hr class="my-4">
+                                            <small class="text-body-secondary">Reviewing the terms of use is necessary before updating the data.</small>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="9" class="text-center text-danger">No Users Added. Use the Above Button to Add Users.</td>
+                    </tr>
+                {% endif %}
+                
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add New User Modal -->
+    <div class="modal fade" id="addNewUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addNewUser" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h1 class="fw-bold mb-0 fs-2">Add New User</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-5 pt-0">
+                    <form action="/admin-add-users" method="POST">
+                        <div class="row text-center mb-3">
+                            <div class="col">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="designation" id="directorRadio" value="director">
+                                    <label class="form-check-label" for="directorRadio">Director</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="designation" id="headRadio" value="C.I Head">
+                                    <label class="form-check-label" for="headRadio">Head, CI</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="designation" id="scientistRadio" value="scientist">
+                                    <label class="form-check-label" for="scientistRadio">Scientist</label>
+                                </div>
+                            </div>
+                            <!-- <div class="col">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="designation" id="adminRadio" value="admin">
+                                    <label class="form-check-label" for="adminRadio">Admin</label>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="crops" name="crops" required>
+                                <option value="" hidden>Select Crop</option>
+                                <option value="All Crops">All Crops</option>
+                                {% for eachCrop in allCrops %}
+                                    <option value="{{eachCrop[0]}}">{{eachCrop[0]}}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="crops">Crop Permission</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control rounded-3" id="fullName" name="fullName" placeholder="Full Name" required>
+                            <label for="fullName">Full Name</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control rounded-3" id="emailAddress" name="emailAddress" placeholder="name@example.com" required>
+                            <label for="emailAddress">Email Address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="tel" class="form-control rounded-3" id="phone" name="phone" placeholder="Phone">
+                            <label for="phone">Phone</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control rounded-3" id="password" name="password" placeholder="Password" required>
+                            <label for="password">Password</label>
+                        </div>
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Add</button>
+                        <hr class="my-4">
+                        <small class="text-body-secondary">Reviewing the terms of use is necessary before adding a new user.</small>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset User Password Modal -->
+    <div class="modal fade" id="resetUserPassword" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="resetUserPassword" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h1 class="fw-bold mb-0 fs-2">Reset User Password</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-5 pt-0">
+                    <form action="/admin-reset-user-password" method="POST">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="emailAddress" name="emailAddress" required>
+                                <option value="" hidden>Select User</option>
+                                {% for eachUser in allUsers %}
+                                    <option value="{{eachUser.email}}">{{eachUser.name}}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="emailAddress">Full Name</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control rounded-3" id="password" name="password" placeholder="Password" required>
+                            <label for="password">Password</label>
+                        </div>
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Reset</button>
+                        <hr class="my-4">
+                        <small class="text-body-secondary">Reviewing the terms of use is necessary before resetting user password.</small>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock mainBody %}

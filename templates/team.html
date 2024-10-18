@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+
+    <div class="mb-5">
+        <div class="my-2">
+            <a class="btn btn-outline-danger bg-gradient shadow-sm" href="/" role="button">
+                <i class="bi bi-house-door-fill pe-2"></i>Home
+            </a>
+        </div>
+    </div>
+
+    <div class="py-3 my-2">
+
+        <div class="col-md-6">
+            {% with error_messages = get_flashed_messages(category_filter=["error"]) %}
+                {% if error_messages %}
+                    {% for message in error_messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% with success_messages = get_flashed_messages(category_filter=["success"]) %}
+                {% if success_messages %}
+                    {% for message in success_messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}            
+        </div>
+
+        <h2 class="fw-bold mb-2"><span class="hover">Lead</span></h2>
+        
+        <div class="container overflow-hidden">
+            <div class="row gy-5">
+                <div class="col">
+                    <h1>Dr Ch.Sarada</h1>
+                    <p>Principal Scientist (Ag. Statistics)</p>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2 class="fw-bold mb-2"><span class="hover">Associates</span></h2>
+        
+        <div class="container overflow-hidden">
+            <div class="row gy-5">
+                <div class="col-4">
+                    <h1>Dr A L Rathnakumar</h1>
+                    <p>Principal Scientist (Genetics and Plant breeding)</p>
+                </div>
+                <div class="col-4">
+                    <h1>Dr Divya Ambati</h1>
+                    <p>Senior Scientist  (Genetics and Plant breeding)</p>
+                </div>
+                <div class="col-4">
+                    <h1>Dr R.K.Mathur</h1>
+                    <p>Director, ICAR-IIOR</p>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2 class="fw-bold mb-2"><span class="hover">Development Team</span></h2>
+
+        <div class="container overflow-hidden">
+            <div class="row gy-5">
+                <div class="col-6">
+                    <h1>Akash Ramasani</h1>
+                </div>
+                <div class="col-6">
+                    <h1>Nimesh</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock mainBody %}

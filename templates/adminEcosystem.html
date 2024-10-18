@@ -1,0 +1,102 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+
+    <div class="mb-5">
+        <div class="my-2">
+            <a class="btn btn-outline-danger bg-gradient shadow-sm" href="/admin-home" role="button">
+                <i class="bi bi-house-door-fill pe-2"></i>Admin Home
+            </a>
+        </div>
+    </div>
+
+    <!-- Add New Ecosystem Button -->
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+        <button type="button" class="btn btn-dark bg-gradient border-0 me-md-2" data-bs-toggle="modal" data-bs-target="#addNewCrop">
+            <i class="bi bi-plus-circle-fill me-2"></i>Add New Ecosystem
+        </button>
+    </div>
+
+    <div class="table-responsive mb-3 text-center">
+        <table class="table table-hover caption-top">
+
+            <caption class="fw-bold">List of Ecosystems</caption>
+
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Ecosystem Name</th>
+                    <th scope="col">Entry Date</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+
+            <tbody class="table-group-divider">
+                {% if allEcosystems %}
+                    {% for eachEcosystem in allEcosystems %}
+                        <!-- Ecosystems Table -->
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td>{{eachEcosystem.name}}</td>
+                            <td title="{{eachEcosystem.dateCreated.strftime('%d-%m-%Y, %H:%M:%S')}}">{{eachEcosystem.days_ago()}}</td>
+                            <td><a href="/admin-ecosystem-update/{{eachEcosystem.id}}" data-bs-toggle="modal" data-bs-target="#updateEcosystem{{eachEcosystem.id}}"><i class="bi bi-pen"></i></a></td>
+                            <td><a href="/admin-ecosystem-delete/{{eachEcosystem.id}}" role="button"><i class="bi bi-trash text-danger"></i></a></td>
+                        </tr>
+
+                        <!-- Update Ecosystem Modal -->
+                        <div class="modal fade" id="updateEcosystem{{eachEcosystem.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content rounded-4 shadow">
+                                    <div class="modal-header p-5 pb-4 border-bottom-0">
+                                        <h1 class="fw-bold mb-0 fs-2">Update Ecosystem</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    
+                                    <div class="modal-body p-5 pt-0">
+                                        <form action="/admin-ecosystem-update/{{eachEcosystem.id}}" method="post">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control rounded-3" id="ecosystemName" name="ecosystemName" placeholder="Ecosystem Name" value="{{eachEcosystem.name}}" required>
+                                                <label for="ecosystemName">Ecosystem Name</label>
+                                            </div>
+                                            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Update</button>
+                                            <hr class="my-4">
+                                            <small class="text-body-secondary">Reviewing the terms of use is necessary before updating the data.</small>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-danger">No Ecosystems Added. Use the Above Button to Add Ecosystems.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add New Ecosystem Modal -->
+    <div class="modal fade" id="addNewCrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h1 class="fw-bold mb-0 fs-2">Add New Ecosystem</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-5 pt-0">
+                    <form action="/admin-ecosystem" method="post">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control rounded-3" id="ecosystemName" name="ecosystemName" placeholder="Ecosystem Name" required>
+                            <label for="ecosystemName">Ecosystem Name</label>
+                        </div>
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Add</button>
+                        <hr class="my-4">
+                        <small class="text-body-secondary">Reviewing the terms of use is necessary before adding a new ecosystem.</small>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock mainBody %}

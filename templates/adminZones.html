@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+{% block mainBody %}
+
+    <div class="mb-5">
+        <div class="my-2">
+            <a class="btn btn-outline-danger bg-gradient shadow-sm" href="/admin-home" role="button">
+                <i class="bi bi-house-door-fill pe-2"></i>Admin Home
+            </a>
+        </div>
+    </div>
+
+    <!-- Add New Zone Button -->
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+        <button type="button" class="btn btn-dark bg-gradient border-0 me-md-2" data-bs-toggle="modal" data-bs-target="#addNewZone">
+            <i class="bi bi-plus-circle-fill me-2"></i>Add New Zone
+        </button>
+    </div>
+
+    <div class="table-responsive mb-3 text-center">
+        <table class="table table-hover caption-top">
+
+            <caption class="fw-bold">List of Zones</caption>
+
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Zone Name</th>
+                    <th scope="col">Entry Date</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+
+            <tbody class="table-group-divider">
+                {% if allZones %}
+                    {% for eachZone in allZones %}
+                        <!-- Zones Table -->
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td>{{eachZone.name}}</td>
+                            <td title="{{eachZone.dateCreated.strftime('%d-%m-%Y, %H:%M:%S')}}">{{eachZone.days_ago()}}</td>
+                            <td><a href="/admin-zones-delete/{{eachZone.id}}" role="button"><i class="bi bi-trash text-danger"></i></a></td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-danger">No Zones Added. Use the Above Button to Add Zones.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add New Zone Modal -->
+    <div class="modal fade" id="addNewZone" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h1 class="fw-bold mb-0 fs-2">Add New Zone</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-5 pt-0">
+                    <form action="/admin-zones" method="post">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control rounded-3" id="zoneName" name="zoneName" placeholder="Zone Name" required>
+                            <label for="zoneName">Zone Name</label>
+                        </div>
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Add</button>
+                        <hr class="my-4">
+                        <small class="text-body-secondary">Reviewing the terms of use is necessary before adding a new zone.</small>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock mainBody %}
